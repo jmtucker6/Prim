@@ -5,7 +5,6 @@
 static void appendToList(LinkedList *, Node *);
 static void removeNodeFromList(LinkedList *, Node *);
 static bool isOneMemberInList(LinkedList *);
-static bool isEmptyList(LinkedList *);
 static void setHeadofList(LinkedList *, Node *);
 
 LinkedList *newLinkedList(void) {
@@ -36,7 +35,7 @@ void deleteNode(LinkedList *list, Node *node) {
     list -> size--;
 };
 
-extern LinkedList *mergeLists(LinkedList *leftList, LinkedList *rightList) {
+LinkedList *mergeLists(LinkedList *leftList, LinkedList *rightList) {
     if (isEmptyList(leftList))
         return rightList;
     else if (isEmptyList(rightList))
@@ -75,7 +74,7 @@ static bool isOneMemberInList(LinkedList *list) {
     return (list -> size == 1) ? true : false;
 }
 
-static bool isEmptyList(LinkedList *list) {
+bool isEmptyList(LinkedList *list) {
     return (list -> size == 0) ? true : false;
 }
 

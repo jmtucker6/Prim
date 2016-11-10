@@ -11,4 +11,5 @@ extern LinkedList *newLinkedList();
 extern void insertNode(LinkedList *, Node *);
 extern void deleteNode(LinkedList *, Node *);
 extern LinkedList *mergeLists(LinkedList *, LinkedList *);
+extern bool isEmptyList(LinkedList *);
 #endif

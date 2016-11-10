@@ -7,6 +7,8 @@
 static void consolidateBinomialHeap(BinomialHeap *);
 static void cleanBinomialHeap(BinomialHeap *);
 static void bubbleUp(BinomialHeap *, Node *);
+static int calculateConsolidationArraySize(BinomialHeap *);
+static void updateConsolidationArray(Node **, Node *);
 
 BinomialHeap *newBinomialHeap(int (*comparator)(void *, void*)) {
     BinomialHeap *heap = malloc(sizeof(BinomialHeap));
@@ -44,10 +46,38 @@ void deleteFromHeap(BinomialHeap *heap, Node *node) {
     extractMin(heap);
 };
 
-void *extractMin(BinomialHeap *);
+void *extractMin(BinomialHeap *heap) {
+    Node *minimum = heap -> min;
+    deleteNode(heap -> rootList, minimum);
+    mergeLists(heap -> rootList, minimum -> children);
+    consolidateBinomialHeap(heap);
+    heap -> size--;
+    return minimum -> vertex;
+};
 
+// TODO: Pull out into smaller functions
 static void consolidateBinomialHeap(BinomialHeap *heap) {
-    fprintf(stderr, "CONSOLIDATE NOT IMPLEMENTED\n");
+    int arraySize = calculateConsolidationArraySize(heap);
+    Node **consolidationArray = malloc(sizeof(Node *) * arraySize);
+    for (int i = 0; i < arraySize; i++) {
+        consolidationArray[i] = NULL;
+    }
+    while (!isEmptyList(heap -> rootList)) {
+        Node *currNode = heap -> rootList -> head;
+        deleteNode(heap -> rootList, currNode);
+        updateConsolidationArray(consolidationArray, currNode);
+    }
+    heap -> min = NULL;
+    for (int i = 0; i < arraySize; i++) {
+        if (consolidationArray[i] != NULL) {
+            insertNode(heap -> rootList, consolidationArray[i]);
+            if (heap -> min == NULL || 
+                    heap -> comparator(consolidationArray[i], heap -> min) < 0) {
+                heap -> min = consolidationArray[i];
+            }
+        }
+    }
+    free(consolidationArray);
 };
 
 static void cleanBinomialHeap(BinomialHeap *heap) {
@@ -58,4 +88,11 @@ static void cleanBinomialHeap(BinomialHeap *heap) {
 
 static void bubbleUp(BinomialHeap *heap, Node *node) {
     fprintf(stderr, "BUBBLE UP NOT IMPLEMENTED\n");
+}
+
+static int calculateConsolidationArraySize(BinomialHeap *heap) {
+    fprintf(stderr, "CALCULATE NOT IMPLEMENTED\n");
+};
+static void updateConsolidationArray(Node **consolidationArray, Node *currNode) {
+    fprintf(stderr, "UPDATE NOT IMPLEMENTED\n");
 }
