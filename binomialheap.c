@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <math.h>
 #include "binomialheap.h"
 #include "vertex.h"
 
@@ -8,7 +9,9 @@ static void consolidateBinomialHeap(BinomialHeap *);
 static void cleanBinomialHeap(BinomialHeap *);
 static void bubbleUp(BinomialHeap *, Node *);
 static int calculateConsolidationArraySize(BinomialHeap *);
-static void updateConsolidationArray(Node **, Node *);
+static void updateConsolidationArray(BinomialHeap *, Node **, Node *);
+static Node *combineSubheaps(BinomialHeap *, Node *, Node *);
+static bool isExtremeValue(BinomialHeap *, Node *);
 
 BinomialHeap *newBinomialHeap(int (*comparator)(void *, void*)) {
     BinomialHeap *heap = malloc(sizeof(BinomialHeap));
@@ -55,7 +58,6 @@ void *extractMin(BinomialHeap *heap) {
     return minimum -> vertex;
 };
 
-// TODO: Pull out into smaller functions
 static void consolidateBinomialHeap(BinomialHeap *heap) {
     int arraySize = calculateConsolidationArraySize(heap);
     Node **consolidationArray = malloc(sizeof(Node *) * arraySize);
@@ -71,8 +73,7 @@ static void consolidateBinomialHeap(BinomialHeap *heap) {
     for (int i = 0; i < arraySize; i++) {
         if (consolidationArray[i] != NULL) {
             insertNode(heap -> rootList, consolidationArray[i]);
-            if (heap -> min == NULL || 
-                    heap -> comparator(consolidationArray[i], heap -> min) < 0) {
+            if (isExtremeValue(heap, consolidationArray[i])) {
                 heap -> min = consolidationArray[i];
             }
         }
@@ -91,8 +92,33 @@ static void bubbleUp(BinomialHeap *heap, Node *node) {
 }
 
 static int calculateConsolidationArraySize(BinomialHeap *heap) {
-    fprintf(stderr, "CALCULATE NOT IMPLEMENTED\n");
+    return log2(heap -> size) + 1;
 };
-static void updateConsolidationArray(Node **consolidationArray, Node *currNode) {
-    fprintf(stderr, "UPDATE NOT IMPLEMENTED\n");
+
+static void updateConsolidationArray(BinomialHeap *heap,
+        Node **consolidationArray, Node *currNode) {
+    int degree = currNode -> children -> size;
+    while (consolidationArray[degree] != NULL) {
+        currNode = combineSubheaps(heap, currNode, consolidationArray[degree]);
+        consolidationArray[degree] = NULL;
+        degree++;
+    }
+    consolidationArray[degree] = currNode;
 }
+
+static Node *combineSubheaps(BinomialHeap *heap, Node *currNode, Node *nodeFromArray) {
+    if (heap -> comparator(currNode, nodeFromArray) < 0) {
+        insertNode(currNode -> children, nodeFromArray);
+        setParentofNode(nodeFromArray, currNode);
+        return currNode;
+    } else {
+        insertNode(nodeFromArray -> children, currNode);
+        setParentofNode(currNode, nodeFromArray);
+        return nodeFromArray;
+    }
+};
+
+
+static bool isExtremeValue(BinomialHeap *heap, Node *node) {
+    return heap -> min == NULL || heap -> comparator(node, heap -> min) < 0;
+};
