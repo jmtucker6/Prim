@@ -8,4 +8,6 @@ typedef struct Vertex {
     struct Vertex *predecessor;
     Node *owner;
 } Vertex;
+
+extern int vertexMinComparator(Vertex *, Vertex *);
 #endif

@@ -14,4 +14,5 @@ extern void setParentofNode(Node *, Node *);
 extern void setNextofNode(Node *, Node *);
 extern void setPrevofNode(Node *, Node *);
 extern void setChildrenofNode(Node *, struct LinkedList *);
+extern void swapNodeValueWithParent(Node *);
 #endif

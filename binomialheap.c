@@ -67,7 +67,7 @@ static void consolidateBinomialHeap(BinomialHeap *heap) {
     while (!isEmptyList(heap -> rootList)) {
         Node *currNode = heap -> rootList -> head;
         deleteNode(heap -> rootList, currNode);
-        updateConsolidationArray(consolidationArray, currNode);
+        updateConsolidationArray(heap, consolidationArray, currNode);
     }
     heap -> min = NULL;
     for (int i = 0; i < arraySize; i++) {
@@ -88,7 +88,10 @@ static void cleanBinomialHeap(BinomialHeap *heap) {
 }
 
 static void bubbleUp(BinomialHeap *heap, Node *node) {
-    fprintf(stderr, "BUBBLE UP NOT IMPLEMENTED\n");
+    if (heap -> comparator(node -> vertex, node -> parent -> vertex) < 0) {
+        swapNodeValueWithParent(node);
+        bubbleUp(heap, node -> parent);
+    }
 }
 
 static int calculateConsolidationArraySize(BinomialHeap *heap) {
@@ -107,7 +110,7 @@ static void updateConsolidationArray(BinomialHeap *heap,
 }
 
 static Node *combineSubheaps(BinomialHeap *heap, Node *currNode, Node *nodeFromArray) {
-    if (heap -> comparator(currNode, nodeFromArray) < 0) {
+    if (heap -> comparator(currNode -> vertex, nodeFromArray -> vertex) < 0) {
         insertNode(currNode -> children, nodeFromArray);
         setParentofNode(nodeFromArray, currNode);
         return currNode;
@@ -120,5 +123,6 @@ static Node *combineSubheaps(BinomialHeap *heap, Node *currNode, Node *nodeFromA
 
 
 static bool isExtremeValue(BinomialHeap *heap, Node *node) {
-    return heap -> min == NULL || heap -> comparator(node, heap -> min) < 0;
+    return heap -> min == NULL || 
+        heap -> comparator(node -> vertex, heap -> min -> vertex) < 0;
 };

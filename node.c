@@ -32,3 +32,9 @@ void setPrevofNode(Node *node, Node *prev) {
 void setChildrenofNode(Node *node, LinkedList *childList) {
     node -> children = childList;
 };
+
+void swapNodeValueWithParent(Node *node) {
+    Vertex *swapVertex = (Vertex *) node -> vertex;
+    node -> vertex = node -> parent -> vertex;
+    node -> parent -> vertex = swapVertex;
+};
