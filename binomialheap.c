@@ -52,7 +52,7 @@ void deleteFromHeap(BinomialHeap *heap, Node *node) {
 void *extractMin(BinomialHeap *heap) {
     Node *minimum = heap -> min;
     deleteNode(heap -> rootList, minimum);
-    mergeLists(heap -> rootList, minimum -> children);
+    heap -> rootList = mergeLists(heap -> rootList, minimum -> children);
     consolidateBinomialHeap(heap);
     heap -> size--;
     return minimum -> vertex;

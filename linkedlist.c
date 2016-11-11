@@ -1,5 +1,7 @@
 #include "linkedlist.h"
+#include "vertex.h"
 #include <stdlib.h>
+#include <stdio.h>
 #include <stdbool.h>
 
 static void appendToList(LinkedList *, Node *);
@@ -52,6 +54,23 @@ LinkedList *mergeLists(LinkedList *leftList, LinkedList *rightList) {
     }
     return leftList;
 };
+
+void displayLinkedList(LinkedList *list) {
+    Node *node = list -> head;
+    printf("Linked List:");
+    for (int i = 0; i < list -> size; i++) {
+        Vertex *currVertex = (Vertex *) node -> vertex;
+        Vertex *parentVertex = (Vertex *) node -> parent -> vertex;
+        Vertex *nextVertex = (Vertex *) node -> next -> vertex;
+        Vertex *prevVertex = (Vertex *) node -> prev -> vertex;
+        printf(" %d(%d)[p:%d,n:%d,prev:%d]", currVertex -> id,
+                currVertex -> key,
+                parentVertex-> id,
+                nextVertex -> id,
+                prevVertex -> id);
+    }
+    printf("\n");
+}
 
 static void appendToList(LinkedList *list, Node *node) {
         Node *tail = list -> head -> prev;

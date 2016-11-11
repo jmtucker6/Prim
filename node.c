@@ -9,6 +9,7 @@ Node *newNode(void *vertex) {
         // FATAL
         ;
    Vertex *v = (Vertex *) vertex; 
+   v -> owner = node;
    node -> vertex = v;
    node -> next = NULL;
    node -> prev = NULL;
