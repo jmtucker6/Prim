@@ -15,5 +15,5 @@ extern void setVertexId(Vertex *, int);
 extern void setVertexKey(Vertex *, int);
 extern void setVertexPredecessor(Vertex *, Vertex *);
 extern void setVertexOwner(Vertex *, Node *);
-extern int vertexMinComparator(Vertex *, Vertex *);
+extern int vertexMinComparator(void *, void *);
 #endif

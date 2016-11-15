@@ -10,7 +10,14 @@
 
 static Edge *readEdge(FILE *);
 int main (void) {
-
+    BinomialHeap *heap = newBinomialHeap(&vertexMinComparator);
+    Vertex *vertex = newKnownVertex(1, 20);
+    insertIntoHeap(heap, vertex);
+    printf("heap size: %d\n", heap -> size);
+    vertex = newKnownVertex(2, 10);
+    insertIntoHeap(heap, vertex);
+    printf("heap size: %d\n", heap -> size);
+    printf("rootList size: %d\n", heap -> rootList -> size);
     return 0;
 }
 

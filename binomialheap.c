@@ -4,6 +4,7 @@
 #include <math.h>
 #include "binomialheap.h"
 #include "vertex.h"
+#include "linkedlist.h"
 
 static void consolidateBinomialHeap(BinomialHeap *);
 static void cleanBinomialHeap(BinomialHeap *);
@@ -12,6 +13,7 @@ static int calculateConsolidationArraySize(BinomialHeap *);
 static void updateConsolidationArray(BinomialHeap *, Node **, Node *);
 static Node *combineSubheaps(BinomialHeap *, Node *, Node *);
 static bool isExtremeValue(BinomialHeap *, Node *);
+static int logBase2(int);
 
 BinomialHeap *newBinomialHeap(int (*comparator)(void *, void*)) {
     BinomialHeap *heap = malloc(sizeof(BinomialHeap));
@@ -31,8 +33,8 @@ void combineBinomialHeaps(BinomialHeap *recipient, BinomialHeap *donor) {
 
 Node *insertIntoHeap(BinomialHeap *heap, void *v) {
     Node *node = newNode(v);
-    setParentofNode(node, node);
     setChildrenofNode(node, newLinkedList());
+    setParentofNode(node, node);
     insertNode(heap -> rootList, node);
     heap -> size++;
     consolidateBinomialHeap(heap);
@@ -60,8 +62,9 @@ void *extractMin(BinomialHeap *heap) {
 
 static void consolidateBinomialHeap(BinomialHeap *heap) {
     int arraySize = calculateConsolidationArraySize(heap);
-    Node **consolidationArray = malloc(sizeof(Node *) * arraySize);
+    Node **consolidationArray = (Node **) malloc(sizeof(Node *) * arraySize);
     for (int i = 0; i < arraySize; i++) {
+        consolidationArray[i] = malloc(sizeof(Node));
         consolidationArray[i] = NULL;
     }
     while (!isEmptyList(heap -> rootList)) {
@@ -95,7 +98,7 @@ static void bubbleUp(BinomialHeap *heap, Node *node) {
 }
 
 static int calculateConsolidationArraySize(BinomialHeap *heap) {
-    return log2(heap -> size) + 1;
+    return logBase2(heap -> size) + 1;
 };
 
 static void updateConsolidationArray(BinomialHeap *heap,
@@ -127,3 +130,9 @@ static bool isExtremeValue(BinomialHeap *heap, Node *node) {
         heap -> comparator(node -> vertex, heap -> min -> vertex) < 0;
 };
 
+static int logBase2(int num) {
+    int result = 0;
+    while(num >>= 1)
+        ++result;
+    return result;
+};

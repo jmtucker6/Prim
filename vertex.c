@@ -29,15 +29,17 @@ void setVertexPredecessor(Vertex *vertex, Vertex* predecessor) {
 void setVertexOwner(Vertex *vertex, Node* owner) {
     vertex -> owner = owner;
 }
-int vertexMinComparator(Vertex *left, Vertex *right) {
-    if (left -> key < right -> key) {
+int vertexMinComparator(void *left, void *right) {
+    Vertex *leftVertex = (Vertex *) left;
+    Vertex *rightVertex = (Vertex *) right;
+    if (leftVertex -> key < rightVertex -> key) {
         return -1;
-    } else if (left -> key > right -> key) {
+    } else if (leftVertex -> key > rightVertex -> key) {
         return 1;
     } else {
-        if (left -> id < right -> id) {
+        if (leftVertex -> id < rightVertex -> id) {
             return -1;
-        } else  if (left -> id > right -> id) {
+        } else  if (leftVertex -> id > rightVertex -> id) {
             return 1;
         } else {
             return 0;
