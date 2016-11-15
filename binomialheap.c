@@ -126,3 +126,4 @@ static bool isExtremeValue(BinomialHeap *heap, Node *node) {
     return heap -> min == NULL || 
         heap -> comparator(node -> vertex, heap -> min -> vertex) < 0;
 };
+

@@ -1,4 +1,5 @@
 #include "linkedlist.h"
+#include "node.h"
 #include "vertex.h"
 #include <stdlib.h>
 #include <stdio.h>
@@ -29,6 +30,8 @@ void insertNode(LinkedList *list, Node *node) {
 
 
 void deleteNode(LinkedList *list, Node *node) {
+    if (isEmptyList(list))
+        return;
     if (isOneMemberInList(list)) {
         setHeadofList(list, NULL);
     } else {
@@ -60,16 +63,18 @@ void displayLinkedList(LinkedList *list) {
     printf("Linked List:");
     for (int i = 0; i < list -> size; i++) {
         Vertex *currVertex = (Vertex *) node -> vertex;
-        Vertex *parentVertex = (Vertex *) node -> parent -> vertex;
+        Vertex *parentVertex = node -> parent ? node -> parent -> vertex : NULL;
         Vertex *nextVertex = (Vertex *) node -> next -> vertex;
         Vertex *prevVertex = (Vertex *) node -> prev -> vertex;
         printf(" %d(%d)[p:%d,n:%d,prev:%d]", currVertex -> id,
                 currVertex -> key,
-                parentVertex-> id,
+                parentVertex ? parentVertex-> id : -1,
                 nextVertex -> id,
                 prevVertex -> id);
+        node = node -> next;
     }
-    printf("\n");
+    printf("\nSize: %d\n", list -> size);
+
 }
 
 static void appendToList(LinkedList *list, Node *node) {
