@@ -26,4 +26,4 @@ unitTests: $(TEST_OBJS)
 	gcc $(OPTS) $(TEST_OBJS) -o unitTests -lcunit -lm
 	./unitTests
 clean :
-	rm -rf $(OBJS) prim
+	rm -rf $(OBJS) prim unitTests
