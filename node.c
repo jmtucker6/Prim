@@ -38,4 +38,7 @@ void swapNodeValueWithParent(Node *node) {
     Vertex *swapVertex = (Vertex *) node -> vertex;
     node -> vertex = node -> parent -> vertex;
     node -> parent -> vertex = swapVertex;
+    
+    ((Vertex *) node -> vertex) -> owner = node;
+    ((Vertex *) node -> parent -> vertex) -> owner = node -> parent;
 };

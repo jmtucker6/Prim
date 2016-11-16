@@ -8,7 +8,7 @@
 
 static void consolidateBinomialHeap(BinomialHeap *);
 static void cleanBinomialHeap(BinomialHeap *);
-static void bubbleUp(BinomialHeap *, Node *);
+static Node *bubbleUp(BinomialHeap *, Node *);
 static int calculateConsolidationArraySize(BinomialHeap *);
 static void updateConsolidationArray(BinomialHeap *, Node **, Node *);
 static Node *combineSubheaps(BinomialHeap *, Node *, Node *);
@@ -41,13 +41,16 @@ Node *insertIntoHeap(BinomialHeap *heap, void *v) {
     return node;
 }
 
-void decreaseKey(BinomialHeap *heap, Node *node, void *vertex) {
+Node *decreaseKey(BinomialHeap *heap, Node *node, void *vertex) {
     node -> vertex = vertex;
-    bubbleUp(heap, node);
+    Node *finalNode = bubbleUp(heap, node);
+    if(isExtremeValue(heap, finalNode))
+        heap -> min = finalNode;
+    return finalNode;
 };
 
 void deleteFromHeap(BinomialHeap *heap, Node *node) {
-    decreaseKey(heap, node, NULL);
+    decreaseKey(heap, node, newKnownVertex(0,0));
     extractMin(heap);
 };
 
@@ -90,11 +93,12 @@ static void cleanBinomialHeap(BinomialHeap *heap) {
     heap -> min = NULL;
 }
 
-static void bubbleUp(BinomialHeap *heap, Node *node) {
+static Node *bubbleUp(BinomialHeap *heap, Node *node) {
     if (heap -> comparator(node -> vertex, node -> parent -> vertex) < 0) {
         swapNodeValueWithParent(node);
-        bubbleUp(heap, node -> parent);
-    }
+        return bubbleUp(heap, node -> parent);
+    } else
+        return node;
 }
 
 static int calculateConsolidationArraySize(BinomialHeap *heap) {

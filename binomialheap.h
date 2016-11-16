@@ -14,7 +14,7 @@ typedef struct BinomialHeap {
 extern BinomialHeap *newBinomialHeap(int (*)(void *, void*));
 extern void combineBinomialHeaps(BinomialHeap *, BinomialHeap *);
 extern Node *insertIntoHeap(BinomialHeap *, void *);
-extern void decreaseKey(BinomialHeap *, Node *, void *);
+extern Node *decreaseKey(BinomialHeap *, Node *, void *);
 extern void deleteFromHeap(BinomialHeap *, Node *);
 extern void *extractMin(BinomialHeap *);
 

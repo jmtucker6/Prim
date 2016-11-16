@@ -1,6 +1,6 @@
 OBJS = prim.o linkedlist.o node.o vertex.o binomialheap.o scanner.o edge.o
 OPTS = -std=c99 -g -Wall
-TEST_OBJS = unitTests.o testLinkedList.o testBinomialHeap.o linkedlist.o node.o vertex.o binomialheap.o
+TEST_OBJS = unitTests.o testVertex.o testLinkedList.o testBinomialHeap.o linkedlist.o node.o vertex.o binomialheap.o
 
 prim : $(OBJS)
 	gcc $(OPTS) $(OBJS) -o prim -lm
@@ -16,14 +16,17 @@ edge.o : edge.h edge.c
 	gcc $(OPTS) -c edge.c
 scanner.o : scanner.h scanner.c
 	gcc $(OPTS) -c scanner.c
-testLinkedList.o : testLinkedList.c vertex.h node.h linkedlist.h
+testVertex.o : testVertex.c testVertex.h vertex.h
+	gcc $(OPTS) -c testVertex.c
+testLinkedList.o : testLinkedList.c testLinkedList.h vertex.h node.h linkedlist.h
 	gcc $(OPTS) -c testLinkedList.c
 testBinomialHeap.o : testBinomialHeap.c testBinomialHeap.h binomialheap.h vertex.h
 	gcc $(OPTS) -c testBinomialHeap.c
-unitTests.o : unitTests.c testLinkedList.h
+unitTests.o : unitTests.c testLinkedList.h testBinomialHeap.h testVertex.h
 	gcc $(OPTS) -c unitTests.c
 unitTests: $(TEST_OBJS)
 	gcc $(OPTS) $(TEST_OBJS) -o unitTests -lcunit -lm
+test : unitTests
 	./unitTests
 clean :
 	rm -rf $(OBJS) prim unitTests

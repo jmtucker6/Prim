@@ -32,6 +32,11 @@ void setVertexOwner(Vertex *vertex, Node* owner) {
 int vertexMinComparator(void *left, void *right) {
     Vertex *leftVertex = (Vertex *) left;
     Vertex *rightVertex = (Vertex *) right;
+    if (leftVertex == NULL)
+        return (rightVertex == NULL) ? 0 : -1;
+    if (rightVertex == NULL)
+        return 1;
+
     if (leftVertex -> key < rightVertex -> key) {
         return -1;
     } else if (leftVertex -> key > rightVertex -> key) {
