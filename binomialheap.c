@@ -50,13 +50,18 @@ Node *decreaseKey(BinomialHeap *heap, Node *node, void *vertex) {
 };
 
 void deleteFromHeap(BinomialHeap *heap, Node *node) {
-    decreaseKey(heap, node, newKnownVertex(0,0));
+    decreaseKey(heap, node, NULL);
     extractMin(heap);
 };
 
 void *extractMin(BinomialHeap *heap) {
     Node *minimum = heap -> min;
     deleteNode(heap -> rootList, minimum);
+    Node *tempNode = minimum -> children -> head;
+    for (int i = 0; i < minimum -> children -> size; i++) {
+        setParentofNode(tempNode, tempNode);
+        tempNode = tempNode -> next;
+    }
     heap -> rootList = mergeLists(heap -> rootList, minimum -> children);
     consolidateBinomialHeap(heap);
     heap -> size--;

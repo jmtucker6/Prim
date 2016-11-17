@@ -3,6 +3,7 @@
 #include "testBinomialHeap.h"
 #include "binomialheap.h"
 #include "vertex.h"
+#include "linkedlist.h"
 
 static void test_heap_create(void) {
     BinomialHeap *heap = newBinomialHeap(&vertexMinComparator);
@@ -69,19 +70,37 @@ static void test_extract_min(void) {
 
 static void test_delete_from_heap(void) {
     BinomialHeap *heap = newBinomialHeap(&vertexMinComparator);
-    insertIntoHeap(heap, newKnownVertex(1, 20));
-    insertIntoHeap(heap, newKnownVertex(2, 15));
-    Node *arbitraryNode = insertIntoHeap(heap, newKnownVertex(3, 27));
+    Vertex *vertex = newKnownVertex(1, 20);
+    insertIntoHeap(heap, vertex);
+    displayLinkedList(heap -> rootList);
+    deleteFromHeap(heap, vertex -> owner);
+    CU_ASSERT_EQUAL(heap -> min, NULL);
+    CU_ASSERT_EQUAL(heap -> size, 0);
+
+    vertex = newKnownVertex(1, 20);
+    insertIntoHeap(heap, vertex);
+    vertex = newKnownVertex(2, 15);
+    insertIntoHeap(heap, vertex);
+    displayLinkedList(heap -> rootList);
+    deleteFromHeap(heap, vertex -> owner);
+    CU_ASSERT_EQUAL(heap -> size, 1);
+    CU_ASSERT_PTR_NOT_EQUAL(heap -> rootList -> head, NULL);
+    
+    vertex = newKnownVertex(3, 27);
+    insertIntoHeap(heap, vertex);
     insertIntoHeap(heap, newKnownVertex(4, 31));
     insertIntoHeap(heap, newKnownVertex(5, 7));
     insertIntoHeap(heap, newKnownVertex(6, 22));
     insertIntoHeap(heap, newKnownVertex(7, 13));
     Node *minNode = heap -> min;
+    displayLinkedList(heap -> rootList);
     deleteFromHeap(heap, minNode);
     CU_ASSERT_PTR_NOT_EQUAL(heap -> min, minNode);
-    CU_ASSERT_EQUAL(heap -> size, 6);
-    deleteFromHeap(heap, arbitraryNode);
     CU_ASSERT_EQUAL(heap -> size, 5);
+    displayLinkedList(heap -> rootList);
+    displayLinkedList(heap -> min -> children);
+    deleteFromHeap(heap, vertex -> owner);
+    //CU_ASSERT_EQUAL(heap -> size, 4);
 }
 
 static void test_combine_binomial_heaps(void) {
