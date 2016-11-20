@@ -54,6 +54,9 @@ LinkedList *mergeLists(LinkedList *leftList, LinkedList *rightList) {
         setNextofNode(rightTail, leftList -> head);
         setPrevofNode(leftList -> head, rightTail);
         leftList -> size = leftList -> size + rightList -> size;
+
+        rightList -> head = NULL;
+        rightList -> size = 0;
     }
     return leftList;
 };

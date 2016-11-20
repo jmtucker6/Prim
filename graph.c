@@ -17,13 +17,16 @@ Graph *newGraph(int size) {
 };
 
 void setGraphUndirEdge(Graph *graph, Edge *edge) {
-    if (graph -> edges[edge -> sourceId][edge -> sinkId] != 0) {
+    if (graph -> edges[edge -> sourceId][edge -> sinkId] == 0) {
         graph -> edges[edge -> sourceId][edge -> sinkId] = edge -> weight;
         graph -> edges[edge -> sinkId][edge -> sourceId] = edge -> weight;
+        setGraphVertex(graph, newVertexGivenId(edge -> sourceId));
+        setGraphVertex(graph, newVertexGivenId(edge -> sinkId));
     }
 };
 
 void setGraphVertex(Graph *graph, Vertex *vertex) {
-    graph -> vertices[vertex -> id] = vertex;
+    if (graph -> vertices[vertex -> id] == NULL)
+        graph -> vertices[vertex -> id] = vertex;
 };
 

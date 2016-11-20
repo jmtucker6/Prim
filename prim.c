@@ -5,33 +5,72 @@
 #include "node.h"
 #include "linkedlist.h"
 #include "binomialheap.h"
+#include "graph.h"
 #include "edge.h"
 
 
 static Edge *readEdge(FILE *);
-int main (void) {
-    BinomialHeap *heap = newBinomialHeap(&vertexMinComparator);
-    Vertex *vertex = newKnownVertex(1, 20);
-    insertIntoHeap(heap, vertex);
-    printf("heap size: %d\n", heap -> size);
-    vertex = newKnownVertex(2, 10);
-    insertIntoHeap(heap, vertex);
-    printf("heap size: %d\n", heap -> size);
-    printf("rootList size: %d\n", heap -> rootList -> size);
+static int findMaxVertexID(FILE *);
+static Graph *readGraph(FILE *, int);
+
+int main (int argc, const char *argv[]) {
+    Graph *graph = NULL;
+    if (argc != 2) {
+        fprintf(stderr, "Call must be \"prim <filename>\"\n");
+    }
+    FILE *fp = fopen(argv[1], "r");
+    int max = 0;
+    max = findMaxVertexID(fp);
+    fclose(fp);
+
+    fp = fopen(argv[1], "r");
+    graph = readGraph(fp, max);
+    fclose(fp);
+    //BinomialHeap *heap = newBinomialHeap(&vertexMinComparator);
     return 0;
 }
 
 static Edge *readEdge(FILE *fp) {
-    int v1, v2, weight;
-    v1 = readInt(fp);
-    v2 = readInt(fp);
+    int sourceId, sinkId, weight;
     char *temp = readToken(fp);
+    if (temp == NULL)
+        return NULL;
+    sourceId = atoi(temp);
+    sinkId = readInt(fp);
+    temp = readToken(fp);
     if (*temp == ';') {
         weight = 0;
     } else {
         weight = atoi(temp);
         readToken(fp);
     }
-    Edge *edge = newEdge(v1, v2, weight);
+    Edge *edge = newEdge(sourceId, sinkId, weight);
     return edge;
 };
+
+static int findMaxVertexID(FILE *fp) {
+    int max = 0;
+    Edge *edge = readEdge(fp);
+    while (!feof(fp)) {
+       if (edge == NULL)
+           return max;
+       if (edge -> sourceId > max)
+          max = edge -> sourceId;
+       if (edge -> sinkId > max)
+          max = edge -> sinkId; 
+       edge = readEdge(fp);
+    }
+    return max;
+}
+
+static Graph *readGraph(FILE *fp, int max) {
+    Graph *graph = newGraph(max);
+    Edge *edge = readEdge(fp);
+    while (!feof(fp)) {
+        if (edge == NULL)
+            return graph;
+        setGraphUndirEdge(graph, edge);
+        edge = readEdge(fp);
+    }
+    return graph;
+}
