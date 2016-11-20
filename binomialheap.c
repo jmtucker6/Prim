@@ -14,6 +14,7 @@ static void updateConsolidationArray(BinomialHeap *, Node **, Node *);
 static Node *combineSubheaps(BinomialHeap *, Node *, Node *);
 static bool isExtremeValue(BinomialHeap *, Node *);
 static int logBase2(int);
+static void resetParentsOfListNodes(LinkedList *);
 
 BinomialHeap *newBinomialHeap(int (*comparator)(void *, void*)) {
     BinomialHeap *heap = malloc(sizeof(BinomialHeap));
@@ -57,11 +58,7 @@ void deleteFromHeap(BinomialHeap *heap, Node *node) {
 void *extractMin(BinomialHeap *heap) {
     Node *minimum = heap -> min;
     deleteNode(heap -> rootList, minimum);
-    Node *tempNode = minimum -> children -> head;
-    for (int i = 0; i < minimum -> children -> size; i++) {
-        setParentofNode(tempNode, tempNode);
-        tempNode = tempNode -> next;
-    }
+    resetParentsOfListNodes(minimum -> children);
     heap -> rootList = mergeLists(heap -> rootList, minimum -> children);
     consolidateBinomialHeap(heap);
     heap -> size--;
@@ -145,3 +142,11 @@ static int logBase2(int num) {
         ++result;
     return result;
 };
+
+static void resetParentsOfListNodes(LinkedList *list) {
+    Node *tempNode = list -> head;
+    for (int i = 0; i < list -> size; i++) {
+        setParentofNode(tempNode, tempNode);
+        tempNode = tempNode -> next;
+    }
+}
