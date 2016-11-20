@@ -1,18 +1,23 @@
 #include <stdlib.h>
+#include <limits.h>
 #include "vertex.h"
 
 Vertex *newVertex() {
     Vertex *vertex = malloc(sizeof(Vertex));
     vertex -> id = 0;
-    vertex -> key = 0;
+    vertex -> key = INT_MAX;
     vertex -> predecessor = NULL;
     vertex -> owner = NULL;
     return vertex;
 }
 
-Vertex *newKnownVertex(int id, int key) {
+Vertex *newVertexGivenId(int id) {
     Vertex *vertex = newVertex();
     setVertexId(vertex, id);
+    return vertex;
+};
+Vertex *newKnownVertex(int id, int key) {
+    Vertex *vertex = newVertexGivenId(id);
     setVertexKey(vertex, key);
     return vertex;
 };

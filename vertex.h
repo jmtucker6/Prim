@@ -10,6 +10,7 @@ typedef struct Vertex {
 } Vertex;
 
 extern Vertex *newVertex();
+extern Vertex *newVertexGivenId(int);
 extern Vertex *newKnownVertex(int, int);
 extern void setVertexId(Vertex *, int);
 extern void setVertexKey(Vertex *, int);

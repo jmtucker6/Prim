@@ -1,14 +1,21 @@
 #include <CUnit/CUnit.h>
 #include <CUnit/Basic.h>
+#include <limits.h>
 #include "vertex.h"
 
 static void test_new_vertex(void) {
     Vertex *vertex = newVertex();
     CU_ASSERT(vertex != NULL);
     CU_ASSERT_EQUAL(vertex -> id, 0);
-    CU_ASSERT_EQUAL(vertex -> key, 0);
+    CU_ASSERT_EQUAL(vertex -> key, INT_MAX);
 }
 
+static void test_new_vertex_given_id(void) {
+    Vertex *vertex = newVertexGivenId(1);
+    CU_ASSERT(vertex != NULL);
+    CU_ASSERT_EQUAL(vertex -> id, 1);
+    CU_ASSERT_EQUAL(vertex -> key, INT_MAX);
+}
 static void test_new_known_vertex(void) {
     Vertex *vertex = newKnownVertex(1, 20);
     CU_ASSERT(vertex != NULL);
@@ -30,6 +37,7 @@ static void test_vertex_min_comparator(void) {
 
 int fill_vertex_suite(CU_pSuite suite) {
     if((NULL == CU_add_test(suite, "test_new_vertex", test_new_vertex)) ||
+            (NULL == CU_add_test(suite, "test_new_vertex_given_id", test_new_vertex_given_id)) ||
             (NULL == CU_add_test(suite, "test_new_known_vertex", test_new_known_vertex)) ||
             (NULL == CU_add_test(suite, "test_vertex_min_comparator", test_vertex_min_comparator))) {
         CU_cleanup_registry();

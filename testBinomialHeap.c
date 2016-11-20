@@ -100,7 +100,7 @@ static void test_delete_from_heap(void) {
     displayLinkedList(heap -> rootList);
     displayLinkedList(heap -> min -> children);
     deleteFromHeap(heap, vertex -> owner);
-    //CU_ASSERT_EQUAL(heap -> size, 4);
+    CU_ASSERT_EQUAL(heap -> size, 4);
 }
 
 static void test_combine_binomial_heaps(void) {
