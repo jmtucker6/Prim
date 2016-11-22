@@ -17,5 +17,6 @@ extern Node *insertIntoHeap(BinomialHeap *, void *);
 extern Node *decreaseKey(BinomialHeap *, Node *, void *);
 extern void deleteFromHeap(BinomialHeap *, Node *);
 extern void *extractMin(BinomialHeap *);
+extern bool isEmptyHeap(BinomialHeap *);
 
 #endif

@@ -1,9 +1,13 @@
 #include "graph.h"
+#include "binomialheap.h"
 #include <stdlib.h>
 
-Graph *newGraph(int size) {
-    size = size + 1;
+static bool shouldUpdateNeighborValues(Vertex *, int);
+
+Graph *newGraph(int maxIndex) {
     Graph *graph = malloc(sizeof(Graph));
+    graph -> maxIndex = maxIndex;
+    int size = maxIndex + 1;
     graph -> vertices = malloc(sizeof(Vertex *) * size);
     graph -> edges = malloc(sizeof(int *) * size);
     for (int i = 0; i < size; i++) {
@@ -30,3 +34,38 @@ void setGraphVertex(Graph *graph, Vertex *vertex) {
         graph -> vertices[vertex -> id] = vertex;
 };
 
+Graph *primMinSpanTree(Graph *graph) {
+    BinomialHeap *heap = newBinomialHeap(&vertexMinComparator);
+    Edge *edge = NULL;
+    Vertex *vertex = NULL;
+    Graph *minimumSpanningTree = newGraph(graph -> maxIndex);
+    for (int i = 0; i <= graph -> maxIndex; i++) {
+        if (graph -> vertices[i] != NULL) {
+            insertIntoHeap(heap, graph -> vertices[i]);
+            setGraphVertex(minimumSpanningTree, graph -> vertices[i]);
+        }
+    }
+    Vertex *tempMinVertex = (Vertex *) heap -> min -> vertex;
+    setVertexPredecessor(tempMinVertex, tempMinVertex);
+    while (!isEmptyHeap(heap)) {
+        vertex = extractMin(heap);
+        setVertexKey(vertex, 0);
+        edge = newEdge(vertex -> id, vertex -> predecessor -> id,
+                graph -> edges[vertex -> id][vertex -> predecessor -> id]);
+        setGraphUndirEdge(minimumSpanningTree, edge);
+        for (int i = 0; i <= graph -> maxIndex; i++) {
+            int weight = graph -> edges[vertex -> id][i];
+            Vertex *neighborVertex = graph -> vertices[i];
+            if (shouldUpdateNeighborValues(neighborVertex, weight)) {
+                setVertexPredecessor(neighborVertex, vertex);
+                setVertexKey(neighborVertex, weight);
+                decreaseKey(heap, neighborVertex -> owner, neighborVertex);
+            }
+        }
+    }
+    return minimumSpanningTree;
+}
+
+static bool shouldUpdateNeighborValues(Vertex *neighborVertex, int edgeWeight) {
+    return edgeWeight != 0 && edgeWeight < neighborVertex -> key;
+};

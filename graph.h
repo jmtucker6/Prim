@@ -4,6 +4,7 @@
 typedef struct Graph {
     Vertex **vertices;
     int **edges;
+    int maxIndex;
 } Graph;
 
 extern Graph *newGraph(int);

@@ -14,7 +14,6 @@ static int findMaxVertexID(FILE *);
 static Graph *readGraph(FILE *, int);
 
 int main (int argc, const char *argv[]) {
-    Graph *graph = NULL;
     if (argc != 2) {
         fprintf(stderr, "Call must be \"prim <filename>\"\n");
     }
@@ -24,7 +23,7 @@ int main (int argc, const char *argv[]) {
     fclose(fp);
 
     fp = fopen(argv[1], "r");
-    graph = readGraph(fp, max);
+    Graph *graph = readGraph(fp, max);
     fclose(fp);
     //BinomialHeap *heap = newBinomialHeap(&vertexMinComparator);
     return 0;

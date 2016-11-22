@@ -65,6 +65,10 @@ void *extractMin(BinomialHeap *heap) {
     return minimum -> vertex;
 };
 
+bool isEmptyHeap(BinomialHeap *heap) {
+    return heap -> size == 0;
+};
+
 static void consolidateBinomialHeap(BinomialHeap *heap) {
     int arraySize = calculateConsolidationArraySize(heap);
     Node **consolidationArray = (Node **) malloc(sizeof(Node *) * arraySize);
