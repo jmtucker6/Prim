@@ -55,11 +55,38 @@ static void test_prim_min_span_tree(void) {
         {0, 0, 0, 0, 0, 5, 0},
         {0, 7, 0, 0, 0, 0, 9},
         {0, 0, 1, 5, 0, 0, 0},
-        {0, 0, 0, 0, 9, 0, 0},
+        {0, 0, 0, 0, 9, 0, 0}
     };
 
     Graph *minTree = primMinSpanTree(graph);
     for (int sourceId = 0; sourceId <= 6; sourceId++)
+        for (int sinkId = 0; sinkId <= 6; sinkId++)
+            CU_ASSERT_EQUAL(minTree -> edges[sourceId][sinkId],
+                    edges[sourceId][sinkId]);
+
+}
+
+static void test_prim_min_span_tree_disconnected(void) {
+    Graph *graph = newGraph(6);
+    setGraphUndirEdge(graph, newEdge(1, 2, 2));
+    setGraphUndirEdge(graph, newEdge(1, 4, 3));
+    setGraphUndirEdge(graph, newEdge(1, 5, 6));
+    setGraphUndirEdge(graph, newEdge(2, 4, 9));
+    setGraphUndirEdge(graph, newEdge(3, 6, 7));
+    setGraphUndirEdge(graph, newEdge(4, 5, 8));
+
+    int edges[7][7] = {
+        {0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 2, 0, 3, 6, 0},
+        {0, 2, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 7},
+        {0, 3, 0, 0, 0, 0, 0},
+        {0, 6, 0, 0, 0, 0, 0},
+        {0, 0, 0, 7, 0, 0, 0},
+    };
+
+    Graph *minTree = primMinSpanTree(graph);
+    for (int sourceId = 0; sourceId <= 3; sourceId++)
         for (int sinkId = 0; sinkId <= 6; sinkId++)
             CU_ASSERT_EQUAL(minTree -> edges[sourceId][sinkId],
                     edges[sourceId][sinkId]);
@@ -70,7 +97,8 @@ int fill_graph_suite(CU_pSuite suite)
     if ((NULL == CU_add_test(suite, "test_new_graph", test_new_graph)) ||
             (NULL == CU_add_test(suite, "test_set_graph_undir_edge", test_set_graph_undir_edge)) ||
             (NULL == CU_add_test(suite, "test_set_graph_vertex", test_set_graph_vertex)) ||
-            (NULL == CU_add_test(suite, "test_prim_min_span_tree", test_prim_min_span_tree))) {
+            (NULL == CU_add_test(suite, "test_prim_min_span_tree", test_prim_min_span_tree)) ||
+            (NULL == CU_add_test(suite, "test_prim_min_span_tree_disconnected", test_prim_min_span_tree_disconnected))) {
         CU_cleanup_registry();
         return -1;
     }

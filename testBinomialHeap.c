@@ -72,7 +72,6 @@ static void test_delete_from_heap(void) {
     BinomialHeap *heap = newBinomialHeap(&vertexMinComparator);
     Vertex *vertex = newKnownVertex(1, 20);
     insertIntoHeap(heap, vertex);
-    displayLinkedList(heap -> rootList);
     deleteFromHeap(heap, vertex -> owner);
     CU_ASSERT_EQUAL(heap -> min, NULL);
     CU_ASSERT_EQUAL(heap -> size, 0);
@@ -81,7 +80,6 @@ static void test_delete_from_heap(void) {
     insertIntoHeap(heap, vertex);
     vertex = newKnownVertex(2, 15);
     insertIntoHeap(heap, vertex);
-    displayLinkedList(heap -> rootList);
     deleteFromHeap(heap, vertex -> owner);
     CU_ASSERT_EQUAL(heap -> size, 1);
     CU_ASSERT_PTR_NOT_EQUAL(heap -> rootList -> head, NULL);
@@ -93,12 +91,9 @@ static void test_delete_from_heap(void) {
     insertIntoHeap(heap, newKnownVertex(6, 22));
     insertIntoHeap(heap, newKnownVertex(7, 13));
     Node *minNode = heap -> min;
-    displayLinkedList(heap -> rootList);
     deleteFromHeap(heap, minNode);
     CU_ASSERT_PTR_NOT_EQUAL(heap -> min, minNode);
     CU_ASSERT_EQUAL(heap -> size, 5);
-    displayLinkedList(heap -> rootList);
-    displayLinkedList(heap -> min -> children);
     deleteFromHeap(heap, vertex -> owner);
     CU_ASSERT_EQUAL(heap -> size, 4);
 }

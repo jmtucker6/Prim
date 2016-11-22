@@ -25,7 +25,8 @@ int main (int argc, const char *argv[]) {
     fp = fopen(argv[1], "r");
     Graph *graph = readGraph(fp, max);
     fclose(fp);
-    //BinomialHeap *heap = newBinomialHeap(&vertexMinComparator);
+
+    //Graph *minTree = primMinSpanTree(graph);
     return 0;
 }
 
@@ -38,7 +39,7 @@ static Edge *readEdge(FILE *fp) {
     sinkId = readInt(fp);
     temp = readToken(fp);
     if (*temp == ';') {
-        weight = 0;
+        weight = 1;
     } else {
         weight = atoi(temp);
         readToken(fp);

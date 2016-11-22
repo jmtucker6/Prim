@@ -1,6 +1,7 @@
 #include "graph.h"
 #include "binomialheap.h"
 #include <stdlib.h>
+#include <limits.h>
 
 static bool shouldUpdateNeighborValues(Vertex *, int);
 
@@ -45,10 +46,10 @@ Graph *primMinSpanTree(Graph *graph) {
             setGraphVertex(minimumSpanningTree, graph -> vertices[i]);
         }
     }
-    Vertex *tempMinVertex = (Vertex *) heap -> min -> vertex;
-    setVertexPredecessor(tempMinVertex, tempMinVertex);
     while (!isEmptyHeap(heap)) {
         vertex = extractMin(heap);
+        if (vertex -> key == INT_MAX)
+            setVertexPredecessor(vertex, vertex);
         setVertexKey(vertex, 0);
         edge = newEdge(vertex -> id, vertex -> predecessor -> id,
                 graph -> edges[vertex -> id][vertex -> predecessor -> id]);
