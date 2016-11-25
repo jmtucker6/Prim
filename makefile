@@ -1,11 +1,13 @@
-OBJS = prim.o linkedlist.o node.o vertex.o binomialheap.o scanner.o edge.o graph.o
+OBJS = prim.o linkedlist.o node.o vertex.o binomialheap.o scanner.o edge.o graph.o queue.o
 OPTS = -std=c99 -g -Wall
-TEST_OBJS = unitTests.o testGraph.o testVertex.o testLinkedList.o testBinomialHeap.o linkedlist.o node.o vertex.o binomialheap.o graph.o edge.o
+TEST_OBJS = unitTests.o testGraph.o testVertex.o testLinkedList.o testBinomialHeap.o linkedlist.o node.o vertex.o binomialheap.o graph.o edge.o queue.o
 
 prim : $(OBJS)
 	gcc $(OPTS) $(OBJS) -o prim -lm
 prim.o : prim.c scanner.h vertex.h node.h linkedlist.h binomialheap.h graph.h edge.h
 	gcc $(OPTS) -c prim.c
+queue.o : queue.h queue.c node.h vertex.h
+	gcc $(OPTS) -c queue.c
 linkedlist.o : linkedlist.c linkedlist.h node.h
 	gcc $(OPTS) -c linkedlist.c
 node.o : node.c node.h linkedlist.h vertex.h

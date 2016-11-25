@@ -26,7 +26,8 @@ int main (int argc, const char *argv[]) {
     Graph *graph = readGraph(fp, max);
     fclose(fp);
 
-    //Graph *minTree = primMinSpanTree(graph);
+    Graph *minGraph = primMinSpanTree(graph);
+    printMinForest(minGraph);
     return 0;
 }
 

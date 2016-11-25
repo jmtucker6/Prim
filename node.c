@@ -14,7 +14,7 @@ Node *newNode(void *vertex) {
    node -> next = NULL;
    node -> prev = NULL;
    node -> parent = NULL;
-   node -> children = NULL;
+   node -> children = newLinkedList();
    return node;
 };
 

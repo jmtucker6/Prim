@@ -12,6 +12,8 @@ static void setHeadofList(LinkedList *, Node *);
 
 LinkedList *newLinkedList(void) {
     LinkedList *list = malloc(sizeof(LinkedList));
+    if (list == NULL)
+        fprintf(stderr, "Out of Memory: Cannot allocate list\n");
     list -> head = NULL;
     list -> size = 0;
     return list;

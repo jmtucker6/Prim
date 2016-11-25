@@ -11,3 +11,4 @@ extern Graph *newGraph(int);
 extern void setGraphUndirEdge(Graph *, Edge *);
 extern void setGraphVertex(Graph *, Vertex *);
 extern Graph *primMinSpanTree(Graph *);
+extern void printMinForest(Graph *);

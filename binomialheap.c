@@ -34,7 +34,7 @@ void combineBinomialHeaps(BinomialHeap *recipient, BinomialHeap *donor) {
 
 Node *insertIntoHeap(BinomialHeap *heap, void *v) {
     Node *node = newNode(v);
-    setChildrenofNode(node, newLinkedList());
+    // setChildrenofNode(node, newLinkedList());
     setParentofNode(node, node);
     insertNode(heap -> rootList, node);
     heap -> size++;

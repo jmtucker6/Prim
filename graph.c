@@ -1,9 +1,15 @@
 #include "graph.h"
 #include "binomialheap.h"
+#include "queue.h"
 #include <stdlib.h>
 #include <limits.h>
+#include <stdio.h>
 
 static bool shouldUpdateNeighborValues(Vertex *, int);
+static int getCount(Graph *);
+static void printVertex(Graph *, Vertex *);
+static void enqueueChildren(Queue *, Graph *, Vertex *);
+static void enqueueRootVertex(Queue *, Graph *);
 
 Graph *newGraph(int maxIndex) {
     Graph *graph = malloc(sizeof(Graph));
@@ -67,6 +73,82 @@ Graph *primMinSpanTree(Graph *graph) {
     return minimumSpanningTree;
 }
 
+void printMinForest(Graph *minGraph) {
+    Queue *queue = newQueue();
+    int count = getCount(minGraph);
+    int currLevel = -1;
+    int weight = 0;
+
+    enqueueRootVertex(queue, minGraph);
+
+    while (count > 0) {
+        Vertex *currVertex = dequeue(queue);
+        minGraph -> vertices[currVertex -> id] = NULL;
+        if (currVertex -> predecessor == currVertex) {
+            if (weight != 0) {
+                printf("\nWeight: %d\n", weight);
+                weight = 0;
+            }
+            currLevel = -1;
+        }
+        weight += minGraph -> edges[currVertex -> predecessor -> id][currVertex -> id];
+        if (currVertex -> key > currLevel) {
+            currLevel++;
+            if (currLevel == 0)
+                printf("0:");
+            else
+                printf("\n%d:", currLevel);
+        }
+        printVertex(minGraph, currVertex);
+        enqueueChildren(queue, minGraph, currVertex);
+        count--;
+        if (isEmptyQueue(queue) && count > 0) {
+            enqueueRootVertex(queue, minGraph);
+        }
+    }
+    printf("\nWeight: %d\n", weight);
+}
+
 static bool shouldUpdateNeighborValues(Vertex *neighborVertex, int edgeWeight) {
     return edgeWeight != 0 && edgeWeight < neighborVertex -> key;
-};
+}; 
+
+static int getCount(Graph *graph) {
+    int count = 0;
+    for (int i = 0; i <= graph -> maxIndex; i++) {
+        if (graph -> vertices[i] != NULL) {
+            count++;
+        }
+    }
+    return count;
+}
+
+static void printVertex(Graph *graph, Vertex *vertex) {
+    if (vertex -> predecessor == vertex) {
+        printf(" %d", vertex -> id);
+        return;
+    }
+    printf(" %d(%d)%d", vertex -> id, vertex -> predecessor -> id,
+            graph -> edges[vertex -> id][vertex -> predecessor -> id]);
+
+}
+
+static void enqueueChildren(Queue *queue, Graph *graph, Vertex* vertex) {
+    int currVertexId = vertex -> id;
+    for (int i = 0; i <= graph -> maxIndex; i++) {
+        Vertex *potentialChild = graph -> vertices[i];
+        if (i != currVertexId && graph -> edges[currVertexId][i] != 0 && potentialChild != NULL && potentialChild -> predecessor == vertex) {
+            setVertexKey(potentialChild, potentialChild -> predecessor -> key + 1);
+            enqueue(queue, potentialChild);
+        }
+    }
+}
+
+static void enqueueRootVertex(Queue *queue, Graph *minGraph) {
+    for (int i = 0; i <= minGraph -> maxIndex; i++) {
+        if (minGraph -> vertices[i] != NULL) {
+            enqueue(queue, minGraph -> vertices[i]);
+            return;;
+        }
+    }
+}
