@@ -34,7 +34,9 @@ unitTests.o : unitTests.c testLinkedList.h testBinomialHeap.h testVertex.h
 	gcc $(OPTS) -c unitTests.c
 unitTests: $(TEST_OBJS)
 	gcc $(OPTS) $(TEST_OBJS) -o unitTests -lcunit -lm
-test : unitTests
+runUnitTest : unitTests
 	./unitTests
+test :
+	@echo "To run unit tests: make runUnitTest"
 clean :
 	rm -rf $(OBJS) prim unitTests

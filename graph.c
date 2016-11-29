@@ -9,29 +9,28 @@ static bool shouldUpdateNeighborValues(Vertex *, int);
 static int getCount(Graph *);
 static void printVertex(Graph *, Vertex *);
 static void enqueueChildren(Queue *, Graph *, Vertex *);
+static Vertex *getRootVertex(Graph *);
 static void enqueueRootVertex(Queue *, Graph *);
 
 Graph *newGraph(int maxIndex) {
     Graph *graph = malloc(sizeof(Graph));
     graph -> maxIndex = maxIndex;
     int size = maxIndex + 1;
-    graph -> vertices = malloc(sizeof(Vertex *) * size);
-    graph -> edges = malloc(sizeof(int *) * size);
+    graph -> vertices = calloc(size, sizeof(Vertex *));
+    graph -> edges = calloc(size, sizeof(int *));
     for (int i = 0; i < size; i++) {
-        graph -> edges[i] = malloc(sizeof(int) * size);
-        graph -> vertices[i] = NULL;
-        for (int j = 0; j < size; j++) {
-            graph -> edges[i][j] = 0;
-        }
+        graph -> edges[i] = calloc(size, sizeof(int));
     }
     return graph;
 };
 
 void setGraphUndirEdge(Graph *graph, Edge *edge) {
     if (graph -> edges[edge -> sourceId][edge -> sinkId] == 0) {
-        graph -> edges[edge -> sourceId][edge -> sinkId] = edge -> weight;
-        graph -> edges[edge -> sinkId][edge -> sourceId] = edge -> weight;
-        setGraphVertex(graph, newVertexGivenId(edge -> sourceId));
+        if (edge -> sourceId != edge -> sinkId) {
+            graph -> edges[edge -> sourceId][edge -> sinkId] = edge -> weight;
+            graph -> edges[edge -> sinkId][edge -> sourceId] = edge -> weight;
+            setGraphVertex(graph, newVertexGivenId(edge -> sourceId));
+        }
         setGraphVertex(graph, newVertexGivenId(edge -> sinkId));
     }
 };
@@ -79,14 +78,16 @@ void printMinForest(Graph *minGraph) {
     int currLevel = -1;
     int weight = 0;
 
+    int firstVertexId = getRootVertex(minGraph) -> id;
+
     enqueueRootVertex(queue, minGraph);
 
     while (count > 0) {
         Vertex *currVertex = dequeue(queue);
         minGraph -> vertices[currVertex -> id] = NULL;
         if (currVertex -> predecessor == currVertex) {
-            if (weight != 0) {
-                printf("\nWeight: %d\n", weight);
+            if (currVertex -> id != firstVertexId) {
+                printf(";\nweight: %d\n", weight);
                 weight = 0;
             }
             currLevel = -1;
@@ -97,7 +98,7 @@ void printMinForest(Graph *minGraph) {
             if (currLevel == 0)
                 printf("0:");
             else
-                printf("\n%d:", currLevel);
+                printf(";\n%d:", currLevel);
         }
         printVertex(minGraph, currVertex);
         enqueueChildren(queue, minGraph, currVertex);
@@ -106,7 +107,7 @@ void printMinForest(Graph *minGraph) {
             enqueueRootVertex(queue, minGraph);
         }
     }
-    printf("\nWeight: %d\n", weight);
+    printf(";\nweight: %d\n", weight);
 }
 
 static bool shouldUpdateNeighborValues(Vertex *neighborVertex, int edgeWeight) {
@@ -144,11 +145,15 @@ static void enqueueChildren(Queue *queue, Graph *graph, Vertex* vertex) {
     }
 }
 
-static void enqueueRootVertex(Queue *queue, Graph *minGraph) {
+static Vertex *getRootVertex(Graph *minGraph) {
     for (int i = 0; i <= minGraph -> maxIndex; i++) {
-        if (minGraph -> vertices[i] != NULL) {
-            enqueue(queue, minGraph -> vertices[i]);
-            return;;
-        }
+        if (minGraph -> vertices[i] != NULL)
+            return minGraph -> vertices[i];
     }
+    return NULL;
 }
+
+static void enqueueRootVertex(Queue *queue, Graph *minGraph) {
+    enqueue(queue, getRootVertex(minGraph));
+}
+ 

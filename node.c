@@ -4,7 +4,7 @@
 #include "vertex.h"
 
 Node *newNode(void *vertex) {
-    Node *node = malloc(sizeof(Node*));
+    Node *node = malloc(sizeof(Node));
     if (node == NULL)
         // FATAL
         ;
