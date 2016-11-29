@@ -10,6 +10,15 @@ static void removeNodeFromList(LinkedList *, Node *);
 static bool isOneMemberInList(LinkedList *);
 static void setHeadofList(LinkedList *, Node *);
 
+/**
+ * linkedlist.c - Implementation of a circular double-linked list
+ *
+ * Written by Jacob M. Tucker
+ */
+
+/**
+ * LinkedList constructor
+ */
 LinkedList *newLinkedList(void) {
     LinkedList *list = malloc(sizeof(LinkedList));
     if (list == NULL)
@@ -19,6 +28,9 @@ LinkedList *newLinkedList(void) {
     return list;
 };
 
+/**
+ * Inserts a node to back of linkedlist
+ */
 void insertNode(LinkedList *list, Node *node) {
     if (isEmptyList(list)) {
         setHeadofList(list, node);
@@ -31,6 +43,9 @@ void insertNode(LinkedList *list, Node *node) {
 };
 
 
+/**
+ * Deletes a node from the list
+ */
 void deleteNode(LinkedList *list, Node *node) {
     if (isEmptyList(list))
         return;
@@ -42,6 +57,9 @@ void deleteNode(LinkedList *list, Node *node) {
     list -> size--;
 };
 
+/**
+ * Combines two list to form one large list stored at the address of the leftList
+ */
 LinkedList *mergeLists(LinkedList *leftList, LinkedList *rightList) {
     if (isEmptyList(leftList))
         return rightList;
@@ -63,6 +81,9 @@ LinkedList *mergeLists(LinkedList *leftList, LinkedList *rightList) {
     return leftList;
 };
 
+/**
+ * Prints out the linked list
+ */
 void displayLinkedList(LinkedList *list) {
     Node *node = list -> head;
     printf("Linked List:");
@@ -82,6 +103,9 @@ void displayLinkedList(LinkedList *list) {
 
 }
 
+/**
+ * Attaches node to the back of the list
+ */
 static void appendToList(LinkedList *list, Node *node) {
         Node *tail = list -> head -> prev;
         setPrevofNode(node, tail);
@@ -91,6 +115,9 @@ static void appendToList(LinkedList *list, Node *node) {
         setPrevofNode(list -> head, node);
 }
 
+/**
+ * Splices out a node from the list
+ */
 static void removeNodeFromList(LinkedList *list, Node *node) {
     Node *prev = node -> prev;
     Node *next = node -> next;
@@ -99,14 +126,24 @@ static void removeNodeFromList(LinkedList *list, Node *node) {
     if (list -> head == node)
         setHeadofList(list, next);
 }
+
+/**
+ * Returns true if there is one member in the list
+ */
 static bool isOneMemberInList(LinkedList *list) {
     return (list -> size == 1) ? true : false;
 }
 
+/**
+ * Returns true if the list has no nodes
+ */
 bool isEmptyList(LinkedList *list) {
     return (list -> size == 0) ? true : false;
 }
 
+/**
+ * Changes the value of the head pointer of the list
+ */
 static void setHeadofList(LinkedList *list, Node *node) {
     list -> head = node;
 };

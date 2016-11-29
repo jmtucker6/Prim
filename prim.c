@@ -8,11 +8,20 @@
 #include "graph.h"
 #include "edge.h"
 
+/**
+ * prim.c - Main driver for interpreting a graph representation and outputing
+ * the minimum spanning tree
+ *
+ * Written by Jacob M. Tucker
+ */
 
 static Edge *readEdge(FILE *);
 static int findMaxVertexID(FILE *);
 static Graph *readGraph(FILE *, int);
 
+/**
+ * Main driver for program
+ */
 int main (int argc, const char *argv[]) {
     if (argc != 2) {
         fprintf(stderr, "Call must be \"prim <filename>\"\n");
@@ -31,6 +40,9 @@ int main (int argc, const char *argv[]) {
     return 0;
 }
 
+/**
+ * Creates an edge struct from input file
+ */
 static Edge *readEdge(FILE *fp) {
     int sourceId, sinkId, weight;
     char *temp = readToken(fp);
@@ -49,6 +61,9 @@ static Edge *readEdge(FILE *fp) {
     return edge;
 };
 
+/**
+ * Returns the largest vertex ID of the input file
+ */
 static int findMaxVertexID(FILE *fp) {
     int max = 0;
     Edge *edge = readEdge(fp);
@@ -64,6 +79,9 @@ static int findMaxVertexID(FILE *fp) {
     return max;
 }
 
+/**
+ * Creates a graph object from input file description
+ */
 static Graph *readGraph(FILE *fp, int max) {
     Graph *graph = newGraph(max);
     Edge *edge = readEdge(fp);

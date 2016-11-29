@@ -13,6 +13,15 @@ static void enqueueChildren(Queue *, Graph *, Vertex *);
 static Vertex *getRootVertex(Graph *);
 static void enqueueRootVertex(Queue *, Graph *);
 
+/**
+ * graph.c - Implementation of graph objects
+ *
+ * Written by Jacob M. Tucker
+ */
+
+/**
+ * Graph constructor
+ */
 Graph *newGraph(int maxIndex) {
     Graph *graph = malloc(sizeof(Graph));
     graph -> maxIndex = maxIndex;
@@ -25,6 +34,9 @@ Graph *newGraph(int maxIndex) {
     return graph;
 };
 
+/**
+ * Translates edge object to an undirected edge in the graph object
+ */
 void setGraphUndirEdge(Graph *graph, Edge *edge) {
     if (graph -> edges[edge -> sourceId][edge -> sinkId] == 0) {
         if (edge -> sourceId != edge -> sinkId) {
@@ -36,11 +48,17 @@ void setGraphUndirEdge(Graph *graph, Edge *edge) {
     }
 };
 
+/**
+ * Sets the vertex at the correct index of the vertex array
+ */
 void setGraphVertex(Graph *graph, Vertex *vertex) {
     if (graph -> vertices[vertex -> id] == NULL)
         graph -> vertices[vertex -> id] = vertex;
 };
 
+/**
+ * Creates a new graph with only edges contained in the minimum spanning tree
+ */
 Graph *primMinSpanTree(Graph *graph) {
     BinomialHeap *heap = newBinHeap(&vertexMinComparator);
     Edge *edge = NULL;
@@ -73,6 +91,9 @@ Graph *primMinSpanTree(Graph *graph) {
     return minimumSpanningTree;
 }
 
+/**
+ * Prints out the Minimum forest per the spec
+ */
 void printMinForest(Graph *minGraph) {
     Queue *queue = newQueue();
     Queue *levelQueue = newQueue();
@@ -105,7 +126,6 @@ void printMinForest(Graph *minGraph) {
                 printf(";\n%d :", currLevel);
         }
         enqueue(levelQueue, currVertex);
-        //printVertex(minGraph, currVertex);
         enqueueChildren(queue, minGraph, currVertex);
         count--;
         if (isEmptyQueue(queue) && count > 0) {
@@ -116,10 +136,16 @@ void printMinForest(Graph *minGraph) {
     printf(";\nweight: %d\n", weight);
 }
 
+/**
+ * Boolean check for if neighbor value must be updated
+ */
 static bool shouldUpdateNeighborValues(Vertex *neighborVertex, int edgeWeight) {
     return edgeWeight != 0 && edgeWeight < neighborVertex -> key;
 }; 
 
+/**
+ * Returns number of vertices in the graph
+ */
 static int getCount(Graph *graph) {
     int count = 0;
     for (int i = 0; i <= graph -> maxIndex; i++) {
@@ -130,6 +156,9 @@ static int getCount(Graph *graph) {
     return count;
 }
 
+/**
+ * Prints one level of the forest
+ */
 static void printLevel(Graph *graph, Queue *levelQueue) {
     if (levelQueue -> count == 0)
         return;
@@ -164,6 +193,9 @@ static void printLevel(Graph *graph, Queue *levelQueue) {
 
 }
 
+/**
+ * Prints a vertex with proper format
+ */
 static void printVertex(Graph *graph, Vertex *vertex) {
     if (vertex -> predecessor == vertex) {
         printf(" %d", vertex -> id);
@@ -174,6 +206,9 @@ static void printVertex(Graph *graph, Vertex *vertex) {
 
 }
 
+/**
+ * Enqueues children of the current vertex
+ */
 static void enqueueChildren(Queue *queue, Graph *graph, Vertex* vertex) {
     int currVertexId = vertex -> id;
     for (int i = 0; i <= graph -> maxIndex; i++) {
@@ -185,6 +220,9 @@ static void enqueueChildren(Queue *queue, Graph *graph, Vertex* vertex) {
     }
 }
 
+/**
+ * Returns the root vertex of a tree
+ */
 static Vertex *getRootVertex(Graph *minGraph) {
     for (int i = 0; i <= minGraph -> maxIndex; i++) {
         if (minGraph -> vertices[i] != NULL)
@@ -193,6 +231,9 @@ static Vertex *getRootVertex(Graph *minGraph) {
     return NULL;
 }
 
+/**
+ * Enqueues the root vertex of a tree
+ */
 static void enqueueRootVertex(Queue *queue, Graph *minGraph) {
     enqueue(queue, getRootVertex(minGraph));
 }
