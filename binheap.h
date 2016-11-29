@@ -1,5 +1,5 @@
-#ifndef _BINOMIALHEAP_H_
-#define _BINOMIALHEAP_H_
+#ifndef _BINHEAP_H_
+#define _BINHEAP_H_
 
 #include "node.h"
 #include "linkedlist.h"
@@ -11,12 +11,12 @@ typedef struct BinomialHeap {
     int size;
 } BinomialHeap;
 
-extern BinomialHeap *newBinomialHeap(int (*)(void *, void*));
+extern BinomialHeap *newBinHeap(int (*)(void *, void*));
 extern void combineBinomialHeaps(BinomialHeap *, BinomialHeap *);
-extern Node *insertIntoHeap(BinomialHeap *, void *);
-extern Node *decreaseKey(BinomialHeap *, Node *, void *);
+extern Node *insertBinHeap(BinomialHeap *, void *);
+extern Node *decreaseKeyBinHeap(BinomialHeap *, Node *, void *);
 extern void deleteFromHeap(BinomialHeap *, Node *);
-extern void *extractMin(BinomialHeap *);
+extern void *extractBinHeap(BinomialHeap *);
 extern bool isEmptyHeap(BinomialHeap *);
 
 #endif

@@ -6,6 +6,7 @@ Queue *newQueue() {
     Queue *queue = malloc(sizeof(Queue));
     queue -> head = NULL;
     queue -> tail = NULL;
+    queue -> count = 0;
     return queue;
 };
 void enqueue(Queue *queue, Vertex *vertex) {
@@ -16,10 +17,12 @@ void enqueue(Queue *queue, Vertex *vertex) {
         queue -> tail -> next = newNode(vertex);
         queue -> tail = queue -> tail -> next;
     }
+    queue -> count++;
 };
 Vertex *dequeue(Queue *queue) {
     Vertex *vertex = (Vertex *) queue -> head -> vertex;
     queue -> head = queue -> head -> next;
+    queue -> count--;
     return vertex;
 };
 

@@ -5,6 +5,7 @@
 typedef struct Queue {
     Node *head;
     Node *tail;
+    int count;
 } Queue;
 
 extern Queue *newQueue();

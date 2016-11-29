@@ -2,7 +2,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <math.h>
-#include "binomialheap.h"
+#include "binheap.h"
 #include "vertex.h"
 #include "linkedlist.h"
 
@@ -16,7 +16,7 @@ static bool isExtremeValue(BinomialHeap *, Node *);
 static int logBase2(int);
 static void resetParentsOfListNodes(LinkedList *);
 
-BinomialHeap *newBinomialHeap(int (*comparator)(void *, void*)) {
+BinomialHeap *newBinHeap(int (*comparator)(void *, void*)) {
     BinomialHeap *heap = malloc(sizeof(BinomialHeap));
     heap -> comparator = comparator;
     heap -> rootList = newLinkedList();
@@ -32,7 +32,7 @@ void combineBinomialHeaps(BinomialHeap *recipient, BinomialHeap *donor) {
     consolidateBinomialHeap(recipient);
 }
 
-Node *insertIntoHeap(BinomialHeap *heap, void *v) {
+Node *insertBinHeap(BinomialHeap *heap, void *v) {
     Node *node = newNode(v);
     // setChildrenofNode(node, newLinkedList());
     setParentofNode(node, node);
@@ -42,7 +42,7 @@ Node *insertIntoHeap(BinomialHeap *heap, void *v) {
     return node;
 }
 
-Node *decreaseKey(BinomialHeap *heap, Node *node, void *vertex) {
+Node *decreaseKeyBinHeap(BinomialHeap *heap, Node *node, void *vertex) {
     node -> vertex = vertex;
     Node *finalNode = bubbleUp(heap, node);
     if(isExtremeValue(heap, finalNode))
@@ -51,11 +51,11 @@ Node *decreaseKey(BinomialHeap *heap, Node *node, void *vertex) {
 };
 
 void deleteFromHeap(BinomialHeap *heap, Node *node) {
-    decreaseKey(heap, node, NULL);
-    extractMin(heap);
+    decreaseKeyBinHeap(heap, node, NULL);
+    extractBinHeap(heap);
 };
 
-void *extractMin(BinomialHeap *heap) {
+void *extractBinHeap(BinomialHeap *heap) {
     Node *minimum = heap -> min;
     deleteNode(heap -> rootList, minimum);
     resetParentsOfListNodes(minimum -> children);

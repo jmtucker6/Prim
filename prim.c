@@ -4,7 +4,7 @@
 #include "vertex.h"
 #include "node.h"
 #include "linkedlist.h"
-#include "binomialheap.h"
+#include "binheap.h"
 #include "graph.h"
 #include "edge.h"
 

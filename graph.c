@@ -1,5 +1,5 @@
 #include "graph.h"
-#include "binomialheap.h"
+#include "binheap.h"
 #include "queue.h"
 #include <stdlib.h>
 #include <limits.h>
@@ -7,6 +7,7 @@
 
 static bool shouldUpdateNeighborValues(Vertex *, int);
 static int getCount(Graph *);
+static void printLevel(Graph *, Queue *);
 static void printVertex(Graph *, Vertex *);
 static void enqueueChildren(Queue *, Graph *, Vertex *);
 static Vertex *getRootVertex(Graph *);
@@ -41,18 +42,18 @@ void setGraphVertex(Graph *graph, Vertex *vertex) {
 };
 
 Graph *primMinSpanTree(Graph *graph) {
-    BinomialHeap *heap = newBinomialHeap(&vertexMinComparator);
+    BinomialHeap *heap = newBinHeap(&vertexMinComparator);
     Edge *edge = NULL;
     Vertex *vertex = NULL;
     Graph *minimumSpanningTree = newGraph(graph -> maxIndex);
     for (int i = 0; i <= graph -> maxIndex; i++) {
         if (graph -> vertices[i] != NULL) {
-            insertIntoHeap(heap, graph -> vertices[i]);
+            insertBinHeap(heap, graph -> vertices[i]);
             setGraphVertex(minimumSpanningTree, graph -> vertices[i]);
         }
     }
     while (!isEmptyHeap(heap)) {
-        vertex = extractMin(heap);
+        vertex = extractBinHeap(heap);
         if (vertex -> key == INT_MAX)
             setVertexPredecessor(vertex, vertex);
         setVertexKey(vertex, 0);
@@ -65,7 +66,7 @@ Graph *primMinSpanTree(Graph *graph) {
             if (shouldUpdateNeighborValues(neighborVertex, weight)) {
                 setVertexPredecessor(neighborVertex, vertex);
                 setVertexKey(neighborVertex, weight);
-                decreaseKey(heap, neighborVertex -> owner, neighborVertex);
+                decreaseKeyBinHeap(heap, neighborVertex -> owner, neighborVertex);
             }
         }
     }
@@ -74,6 +75,7 @@ Graph *primMinSpanTree(Graph *graph) {
 
 void printMinForest(Graph *minGraph) {
     Queue *queue = newQueue();
+    Queue *levelQueue = newQueue();
     int count = getCount(minGraph);
     int currLevel = -1;
     int weight = 0;
@@ -86,6 +88,7 @@ void printMinForest(Graph *minGraph) {
         Vertex *currVertex = dequeue(queue);
         minGraph -> vertices[currVertex -> id] = NULL;
         if (currVertex -> predecessor == currVertex) {
+            printLevel(minGraph, levelQueue);
             if (currVertex -> id != firstVertexId) {
                 printf(";\nweight: %d\n", weight);
                 weight = 0;
@@ -94,19 +97,22 @@ void printMinForest(Graph *minGraph) {
         }
         weight += minGraph -> edges[currVertex -> predecessor -> id][currVertex -> id];
         if (currVertex -> key > currLevel) {
+            printLevel(minGraph, levelQueue);
             currLevel++;
             if (currLevel == 0)
-                printf("0:");
+                printf("0 :");
             else
-                printf(";\n%d:", currLevel);
+                printf(";\n%d :", currLevel);
         }
-        printVertex(minGraph, currVertex);
+        enqueue(levelQueue, currVertex);
+        //printVertex(minGraph, currVertex);
         enqueueChildren(queue, minGraph, currVertex);
         count--;
         if (isEmptyQueue(queue) && count > 0) {
             enqueueRootVertex(queue, minGraph);
         }
     }
+    printLevel(minGraph, levelQueue);
     printf(";\nweight: %d\n", weight);
 }
 
@@ -122,6 +128,40 @@ static int getCount(Graph *graph) {
         }
     }
     return count;
+}
+
+static void printLevel(Graph *graph, Queue *levelQueue) {
+    if (levelQueue -> count == 0)
+        return;
+    Vertex **levelArray = calloc(levelQueue -> count, sizeof(Vertex *));
+    int i = 0;
+    while (!isEmptyQueue(levelQueue)) {
+        levelArray[i] = dequeue(levelQueue);
+        i++;
+    }
+
+    int maxIndex = i;
+    int minIndex;
+    for (int j = 0; j < maxIndex; j++) {
+        minIndex = j;
+        for (int k = j + 1; k < maxIndex; k++) {
+            if (levelArray[k] -> id < levelArray[minIndex] -> id)
+                minIndex = k;
+        }
+
+        if (levelArray[j] != levelArray[minIndex]) {
+            Vertex *temp = levelArray[j];
+            levelArray[j] = levelArray[minIndex];
+            levelArray[minIndex] = temp;
+        }
+    }
+
+    for (int i = 0; i < maxIndex - 1; i++) {
+        printVertex(graph, levelArray[i]);
+        printf(",");
+    }
+    printVertex(graph, levelArray[maxIndex - 1]);
+
 }
 
 static void printVertex(Graph *graph, Vertex *vertex) {
